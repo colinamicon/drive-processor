@@ -2,14 +2,20 @@
 
 const fs = require('fs');
 
+const VALID_CONTACT_TYPES = ['email', 'call', 'coffee']
+
 const readInput = () => {
     const fileArg = process.argv[2]
-    if (fileArg) {
-        try {
-            return fs.readFileSync(fileArg, 'utf8');
-        } catch (err) {
-            console.error('error: ', err)
-        }
+    if (!fileArg) {
+        console.error('no file provided! usage: node analyzeNetwork.js <input-file>')
+        process.exit(1) // google
+    }
+
+    try {
+        return fs.readFileSync(fileArg, 'utf8')
+    } catch (err) {
+        console.error(`error: cannot read "${fileArg}" - ${err.message}`)
+        process.exit(1)
     }
 }
 
@@ -41,7 +47,7 @@ const analyzeNetworkProcessor = (input) => {
     const partners = [];
     const companies = [];
     const employeeToCompany = {};
-    // strengthByCompany = { partners { contact: count } }
+    // strengthByCompany = { company: { partner: count } }
     const strengthByCompany = {};
 
     const inputLines = input.split('\n');
@@ -59,13 +65,16 @@ const analyzeNetworkProcessor = (input) => {
                 break;
 
             case 'Employee': {
-                const [name, contact] = args
-                employeeToCompany[name] = contact
+                const [name, company] = args
+                employeeToCompany[name] = company
                 break;
             }
 
             case 'Contact': {
                 const [employee, partner, type] = args;
+                // requirement: only email, call, or coffee count; skip anything else
+                if (!VALID_CONTACT_TYPES.includes(type)) break;
+
                 const company = employeeToCompany[employee];
                 if (!strengthByCompany[company]) {
                     strengthByCompany[company] = {}

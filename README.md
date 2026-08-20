@@ -20,23 +20,24 @@ Output is printed to the console:
 - Stack: VSCode (JS Debug Terminal), nodejs
 
 ## Data
-- `companies`: [Set]
-- `employeeToCompany`: Map{}: employee names are unique, maps to exactly one company
-- `strengthByCompany`: a nested Map{} of `company -> partner -> count` built as data streams in
--  Partners are only stored once it appears in a   `Contact`
+- `companies`: `[]` array of declared company names, sorted at report time
+- `employeeToCompany`: `{}` plain object: employee names are unique, so each maps to exactly one company
+- `strengthByCompany`: a nested `{}` of `company -> partner -> count`, built as data streams in
+- A partner only gets an entry under a company once they appear in a `Contact` with one of its employees
 
 ## Design
 - Every contact counts as 1
 
 ## Assumptions
 - Input is well formatted. Validation is intentionally minimal
-- Companies with no employees or contacts print: `No Current Relationship`
+- Companies with no employees or contacts print: `No current relationship`
 - Blank lines and trailing newlines are skipped
+- The program should only accept the contact types `email`, `call`, or `coffee` as lowercase values
 
 ## Tools & LLMS
 - I used an LLM (Claude) to:
     - check my work and make enhancements
-    - generate a larger input text file (input-text-2.txt) based on the provided example & Silicon Valley References
+    - generate a larger input text file (input.txt) based on the provided example & Silicon Valley References
     - optimize the `formatCompanyLine` function
 - I used Google to:
     - help with regex
