@@ -9,6 +9,7 @@
     },
     "scripts": {
         "start": "node analyzeNetwork.js",
+        "test": "node --test",
         "format": "prettier --write \"**/*.js\"",
         "format:check": "prettier --check \"**/*.js\""
     },

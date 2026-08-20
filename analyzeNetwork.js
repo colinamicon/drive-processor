@@ -106,4 +106,9 @@ const analyzeNetwork = () => {
     }
 };
 
-analyzeNetwork();
+// only run as a CLI: `require` from a test should not execute the program
+if (require.main === module) {
+    analyzeNetwork();
+}
+
+module.exports = { analyzeNetworkProcessor };

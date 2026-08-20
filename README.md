@@ -26,6 +26,17 @@ node analyzeNetwork              # no file provided! usage: ...
 node analyzeNetwork missing.txt  # error: cannot read "missing.txt" - ENOENT ...
 ```
 
+## TEST
+Uses the built-in Node test runner (`node:test` + `node:assert`), so there are
+no testing dependencies.
+
+```bash
+npm test
+```
+
+`analyzeNetwork.js` guards its CLI call with `require.main === module`, so the
+processor can be imported by a test without executing the program.
+
 ## Formatting
 Prettier is the only dev dependency. Config lives in `.prettierrc` so the
 editor extension, the CLI, and CI all produce the same output.
@@ -42,6 +53,7 @@ npm run format:check
 - Stack: VSCode (JS Debug Terminal), nodejs
 
 ## Data
+- `partners`: `[]` array of declared partner names, used to reject a `Contact` that references an unknown partner
 - `companies`: `[]` array of declared company names, sorted at report time
 - `employeeToCompany`: `{}` plain object: employee names are unique, so each maps to exactly one company
 - `strengthByCompany`: a nested `{}` of `company -> partner -> count`, built as data streams in
@@ -72,3 +84,4 @@ npm run format:check
 - Second commit: main processing logic
 - Third commit: bugfixes & error handling
 - Fourth commit: npm & prettier formatting, gitignore
+- Fifth commit: unit testing
