@@ -2,7 +2,7 @@
 
 ## Requirements
 ### Nodejs
-- uses built-in `fs.readFileSync()` for STDIN
+- uses built-in `fs.readFileSync()`
 
 ## RUN
 **file arg**
@@ -17,6 +17,7 @@ Output is printed to the console:
 ## Approach
 - `analyzeNetwork.js` entry point, main function wrapper
 - `analyzeNetworkProcessor` fn: reads the input, processes and returns a report
+- Stack: VSCode (JS Debug Terminal), nodejs
 
 ## Data
 - `companies`: [Set]
@@ -32,7 +33,18 @@ Output is printed to the console:
 - Companies with no employees or contacts print: `No Current Relationship`
 - Blank lines and trailing newlines are skipped
 
-# Using LLM Tools
-- I used an LLM (Claude) to check my work and make enhancements
-- See the git commit flow for the LLM enhancements for better error handling and brevity
+## Tools & LLMS
+- I used an LLM (Claude) to:
+    - check my work and make enhancements
+    - generate a larger input text file (input-text-2.txt) based on the provided example & Silicon Valley References
+    - optimize the `formatCompanyLine` function
+- I used Google to:
+    - help with regex
+    - help with .sort().map().join() function chain for syntax to build the report 
+    - research node `process.exit(1)` statuses
+- I used the VSCode Javascript Debug Terminal to run the program, debug and analyze the current state
 
+## Git Commit flow
+- Initial commit: initialize repo
+- Second commit: main processing logic
+- Third commit: bugfixes & error handling
