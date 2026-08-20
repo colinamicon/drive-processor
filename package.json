@@ -1,0 +1,18 @@
+{
+    "name": "drive-processor",
+    "version": "1.0.0",
+    "description": "Drive Capital network analysis: reports the partner with the strongest relationship to each company",
+    "main": "analyzeNetwork.js",
+    "private": true,
+    "engines": {
+        "node": ">=20"
+    },
+    "scripts": {
+        "start": "node analyzeNetwork.js",
+        "format": "prettier --write \"**/*.js\"",
+        "format:check": "prettier --check \"**/*.js\""
+    },
+    "devDependencies": {
+        "prettier": "^3.9.6"
+    }
+}

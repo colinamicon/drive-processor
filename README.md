@@ -2,17 +2,39 @@
 
 ## Requirements
 ### Nodejs
+- Node >= 20 (developed on 22 — `nvm use` picks it up from `.nvmrc`)
+- no runtime dependencies
 - uses built-in `fs.readFileSync()`
 
 ## RUN
+No npm install needed to run the program itself:
+
 **file arg**
 ```bash
-node analyzeNetwork input.txt
+node analyzeNetwork input.txt      # example provided
+node analyzeNetwork input-2.txt    # larger dataset
+npm run start input.txt            # run via npm
 ```
 
 Output is printed to the console:
 - one line per company
 - sorted alphabetically
+
+Invalid input exits `1` with a message on stderr:
+```bash
+node analyzeNetwork              # no file provided! usage: ...
+node analyzeNetwork missing.txt  # error: cannot read "missing.txt" - ENOENT ...
+```
+
+## Formatting
+Prettier is the only dev dependency. Config lives in `.prettierrc` so the
+editor extension, the CLI, and CI all produce the same output.
+
+```bash
+npm install         # dev tooling only
+npm run format      # write
+npm run format:check
+```
 
 ## Approach
 - `analyzeNetwork.js` entry point, main function wrapper
@@ -37,7 +59,7 @@ Output is printed to the console:
 ## Tools & LLMS
 - I used an LLM (Claude) to:
     - check my work and make enhancements
-    - generate a larger input text file (input.txt) based on the provided example & Silicon Valley References
+    - generate a larger input text file (input-2.txt) based on the provided example & Silicon Valley References
     - optimize the `formatCompanyLine` function
 - I used Google to:
     - help with regex
@@ -49,3 +71,4 @@ Output is printed to the console:
 - Initial commit: initialize repo
 - Second commit: main processing logic
 - Third commit: bugfixes & error handling
+- Fourth commit: npm & prettier formatting, gitignore

@@ -1,46 +1,46 @@
-'use strict'
+'use strict';
 
 const fs = require('fs');
 
-const VALID_CONTACT_TYPES = ['email', 'call', 'coffee']
+const VALID_CONTACT_TYPES = ['email', 'call', 'coffee'];
 
 const readInput = () => {
-    const fileArg = process.argv[2]
+    const fileArg = process.argv[2];
     if (!fileArg) {
-        console.error('no file provided! usage: node analyzeNetwork.js <input-file>')
-        process.exit(1) // google
+        console.error('no file provided! usage: node analyzeNetwork.js <input-file>');
+        process.exit(1);
     }
 
     try {
-        return fs.readFileSync(fileArg, 'utf8')
+        return fs.readFileSync(fileArg, 'utf8');
     } catch (err) {
-        console.error(`error: cannot read "${fileArg}" - ${err.message}`)
-        process.exit(1)
+        console.error(`error: cannot read "${fileArg}" - ${err.message}`);
+        process.exit(1);
     }
-}
+};
 
 /**
  * LLM: Claude optimized function
- * @param {*} company 
- * @param {*} partners 
+ * @param {*} company
+ * @param {*} partners
  * @returns `${company}: ${best} (${bestStrength})`
  */
 const formatCompanyLine = (company, partners) => {
     // [[partner, count], ...] - empty if no partner ever contacted this company
-    const contacts = Object.entries(partners ?? {})
+    const contacts = Object.entries(partners ?? {});
 
     // requirement: output: ${company}: No current relationship
     if (contacts.length === 0) {
-        return `${company}: No current relationship`
+        return `${company}: No current relationship`;
     }
 
     // strongest first, ties broken alphabetically so output is deterministic
-    contacts.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-    const [best, bestStrength] = contacts[0]
+    contacts.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    const [best, bestStrength] = contacts[0];
 
     // requirement: output: ${company}: ${partner} (${count})
-    return `${company}: ${best} (${bestStrength})`
-}
+    return `${company}: ${best} (${bestStrength})`;
+};
 
 const analyzeNetworkProcessor = (input) => {
     // main processing logic
@@ -52,12 +52,12 @@ const analyzeNetworkProcessor = (input) => {
 
     const inputLines = input.split('\n');
     inputLines.forEach((line, i) => {
-        const inputText = line.trim().split(/\s+/); //google
+        const inputText = line.trim().split(/\s+/);
         const [command, ...args] = inputText;
 
         switch (command) {
             case 'Partner':
-                partners.push(args[0])
+                partners.push(args[0]);
                 break;
 
             case 'Company':
@@ -65,8 +65,8 @@ const analyzeNetworkProcessor = (input) => {
                 break;
 
             case 'Employee': {
-                const [name, company] = args
-                employeeToCompany[name] = company
+                const [name, company] = args;
+                employeeToCompany[name] = company;
                 break;
             }
 
@@ -74,34 +74,35 @@ const analyzeNetworkProcessor = (input) => {
                 const [employee, partner, type] = args;
                 // requirement: only email, call, or coffee count; skip anything else
                 if (!VALID_CONTACT_TYPES.includes(type)) break;
+                if (!partners.includes(partner)) break;
 
                 const company = employeeToCompany[employee];
                 if (!strengthByCompany[company]) {
-                    strengthByCompany[company] = {}
+                    strengthByCompany[company] = {};
                 }
                 const companyPartners = strengthByCompany[company];
-                companyPartners[partner] = ((companyPartners[partner] ?? 0) + 1);
+                companyPartners[partner] = (companyPartners[partner] ?? 0) + 1;
                 break;
             }
 
             default:
                 break;
         }
-    })
+    });
 
-    const report = [...companies] // google
+    const report = [...companies]
         .sort((a, b) => a.localeCompare(b))
         .map((company) => formatCompanyLine(company, strengthByCompany[company]))
-        .join('\n')
+        .join('\n');
 
     return { report };
-}
+};
 
 const analyzeNetwork = () => {
     // node -> analyzeNetwork.js -> readInput() -> analyzeNetworkProcessor() -> return report
-    const { report } = analyzeNetworkProcessor(readInput())
+    const { report } = analyzeNetworkProcessor(readInput());
     if (report) {
-        console.log(report)
+        console.log(report);
     }
 };
 
